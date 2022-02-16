@@ -81,9 +81,15 @@ sudo apt update
 # install java
 sudo apt-get install -y openjdk-8-jdk
 
+# manually define a hostname for all the hosts on our project, this will ensure network connection with spark:
+# NOTE! if you have added entries to /etc/hosts yourself, you need to remove those.
+for i in {1..255}; do echo "192.168.1.$i host-192-168-1-$i-de1" | sudo tee -a /etc/hosts; done
+for i in {1..255}; do echo "192.168.2.$i host-192-168-2-$i-de1" | sudo tee -a /etc/hosts; done
 
-########################################################################################################################
-##### Install the Python Notebook #####
+# set the hostname according to the scheme above:
+sudo hostname host-$(hostname -I | awk '{$1=$1};1' | sed 's/\./-/'g)-de1 ; hostname
+
+# Install the Python Notebook #####
 
 # Env variable so the workers know which Python to use...
 echo "export PYSPARK_PYTHON=python3" >> ~/.bashrc
